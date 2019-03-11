@@ -1,6 +1,7 @@
 
-import { NativeModules } from 'react-native';
+import { NativeModules, NativeEventEmitter, DeviceEventEmitter } from 'react-native';
 
 const { RNNotificationLibrary } = NativeModules;
 
-export default RNNotificationLibrary;
+export const IOSEmitter = new NativeEventEmitter(RNNotificationLibrary);
+export const AndroidEmitter = DeviceEventEmitter;
