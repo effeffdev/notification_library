@@ -19,7 +19,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.util.Set;
 
-public class RNNotificationLibraryModule extends ReactContextBaseJavaModule implements ActivityEventListener, LifecycleEventListener {
+public class RNNotificationLibraryModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
   private static ReactApplicationContext reactContext;
 
