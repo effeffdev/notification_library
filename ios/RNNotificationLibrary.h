@@ -1,11 +1,14 @@
 
 #if __has_include("RCTBridgeModule.h")
 #import "RCTBridgeModule.h"
+#import "RCTEventEmitter.h"
 #else
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 #endif
+#import <UserNotifications/UserNotifications.h>
 
-@interface RNNotificationLibrary : NSObject <RCTBridgeModule>
 
+@interface RNNotificationLibrary : RCTEventEmitter <RCTBridgeModule>
 @end
   
