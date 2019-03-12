@@ -77,15 +77,11 @@ RCT_EXPORT_MODULE()
 - (void) didReceiveNotification:(NSNotification*)notification
 {
     if (notification.name == UIApplicationProtectedDataWillBecomeUnavailable) {
-        if (hasListeners) {
-            [self sendEventWithName:@"ScreenLocked" body:@{}];
-        }
+        [self screenLockedReminderReceived];
         return;
     }
     if (notification.name == UIApplicationDidBecomeActiveNotification) {
-        if (hasListeners) {
-        [self sendEventWithName:@"AppOpened" body:@{}];
-        }
+        [self appOpenedReminderReceived];
         return;
     }
     if (notification.name == UIApplicationDidEnterBackgroundNotification) {
@@ -100,9 +96,15 @@ RCT_EXPORT_MODULE()
 //            [self sendEventWithName:@"AppClosed" body:@{}];
 //            return;
 //        });
-        if (hasListeners) {
-        [self sendEventWithName:@"AppClosed" body:@{}];
+        
+        CGFloat oldBrightness = UIScreen.mainScreen.brightness;
+        UIScreen.mainScreen.brightness = oldBrightness + (oldBrightness <= 0.01 ? (0.01) : (-0.01));
+        if (oldBrightness != UIScreen.mainScreen.brightness) {
+            [self screenLockedReminderReceived];
+            return;
         }
+        [self appClosedReminderReceived];
+        return;
     }
 }
 
@@ -119,28 +121,28 @@ RCT_EXPORT_MODULE()
 - (void)appOpenedReminderReceived
 {
     if (hasListeners) {
-    [self sendEventWithName:@"AppOpened" body:@{}];
+        [self sendEventWithName:@"AppOpened" body:@{}];
     }
 }
 
 - (void)appClosedReminderReceived
 {
     if (hasListeners) {
-    [self sendEventWithName:@"AppClosed" body:@{}];
+        [self sendEventWithName:@"AppClosed" body:@{}];
     }
 }
 
 - (void)screenLockedReminderReceived
 {
     if (hasListeners) {
-    [self sendEventWithName:@"ScreenLocked" body:@{}];
+        [self sendEventWithName:@"ScreenLocked" body:@{}];
     }
 }
 
 - (void)popupDetectedReminderReceived
 {
     if (hasListeners) {
-    [self sendEventWithName:@"PopupDetected" body:@{}];
+        [self sendEventWithName:@"PopupDetected" body:@{}];
     }
 }
 
