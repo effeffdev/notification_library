@@ -108,7 +108,7 @@ RCT_EXPORT_MODULE()
         if (state == UIApplicationStateInactive) {
             [self screenLockedReminderReceived];
         } else {
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC/10);
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
                 if (![[NSUserDefaults standardUserDefaults] boolForKey:@"kDisplayStatusLocked"]) {
                     [self appClosedReminderReceived];
