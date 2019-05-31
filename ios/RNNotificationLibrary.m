@@ -3,23 +3,11 @@
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
 
-static void displayStatusChanged(CFNotificationCenterRef center,
-                                 void *observer,
-                                 CFStringRef name,
-                                 const void *object,
-                                 CFDictionaryRef userInfo) {
-    if (name == CFSTR("com.apple.springboard.lockcomplete")) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"kDisplayStatusLocked"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-}
-
 @implementation RNNotificationLibrary
 {
     bool hasListeners;
+    NSTimer *appResignTimer;
 }
-
-
 
 RCT_EXPORT_MODULE()
 
@@ -67,13 +55,6 @@ RCT_EXPORT_MODULE()
         device.batteryMonitoringEnabled = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryChanged:) name:UIDeviceBatteryLevelDidChangeNotification object:device];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryChanged:) name:UIDeviceBatteryStateDidChangeNotification object:device];
-        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
-                                        NULL,
-                                        displayStatusChanged,
-                                        CFSTR("com.apple.springboard.lockcomplete"),
-                                        NULL,
-                                        CFNotificationSuspensionBehaviorDeliverImmediately);
-        
     }
     
     return self;
@@ -103,24 +84,22 @@ RCT_EXPORT_MODULE()
         [self appOpenedReminderReceived];
         return;
     }
+    if (notification.name == UIApplicationWillResignActiveNotification) {
+        appResignTimer =  [NSTimer scheduledTimerWithTimeInterval:0.001f
+                                                           target:self
+                                                         selector:@selector(appClosedReminderReceived)
+                                                         userInfo:nil
+                                                          repeats:NO];
+        return;
+    }
     if (notification.name == UIApplicationDidEnterBackgroundNotification) {
-        UIApplicationState state = [[UIApplication sharedApplication] applicationState];
-        if (state == UIApplicationStateInactive) {
+        if ([appResignTimer isValid]) {
+            [appResignTimer invalidate];
             [self screenLockedReminderReceived];
-        } else {
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC/10);
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                if (![[NSUserDefaults standardUserDefaults] boolForKey:@"kDisplayStatusLocked"]) {
-                    [self appClosedReminderReceived];
-                } else {
-                    [self screenLockedReminderReceived];
-                }
-            });
         }
         return;
     }
     if (notification.name == UIApplicationWillEnterForegroundNotification) {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"kDisplayStatusLocked"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
