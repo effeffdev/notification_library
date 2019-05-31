@@ -1,5 +1,6 @@
 {
   "name": "@phocus/react-native-notification-library",
+  "description": "Listen to system events",
   "version": "0.1.3",
   "main": "index.js",
   "scripts": {
@@ -8,7 +9,7 @@
   "keywords": [
     "react-native"
   ],
-  "author": "",
+  "author": "Fabian Fröschl",
   "license": "ISC",
   "peerDependencies": {
     "react-native": "^0.41.2",

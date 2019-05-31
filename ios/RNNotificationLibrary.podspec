@@ -1,24 +1,16 @@
+require 'json'
+package = JSON.parse(File.read('../package.json'))
 
 Pod::Spec.new do |s|
-  s.name         = "RNNotificationLibrary"
-  s.version      = "1.0.0"
-  s.summary      = "RNNotificationLibrary"
-  s.description  = <<-DESC
-                  RNNotificationLibrary
-                   DESC
-  s.homepage     = ""
-  s.license      = "MIT"
-  # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
-  s.author             = { "author" => "author@domain.cn" }
-  s.platform     = :ios, "7.0"
-  s.source       = { :git => "https://github.com/author/RNNotificationLibrary.git", :tag => "master" }
-  s.source_files  = "RNNotificationLibrary/**/*.{h,m}"
-  s.requires_arc = true
+  s.name           = "RNNotificationLibrary"
+  s.version        = package["version"]
+  s.summary        = package["description"]
+  s.homepage       = "https://github.com/ffroeschl/notification_library"
+  s.author         = { "Fabian Fröschl" => "ffroeschl@phocus.com" }
+  s.ios.deployment_target = '7.0'
+  s.license        = package["license"]
+  s.source_files   = "*.{h,m}"
+  s.source         = { :git => "https://github.com/ffroeschl/notification_library.git", :tag => "v#{s.version}" }
 
-
-  s.dependency "React"
-  #s.dependency "others"
-
+  s.dependency 'React'
 end
-
-  
