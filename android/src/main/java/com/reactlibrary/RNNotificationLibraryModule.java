@@ -1,22 +1,16 @@
 
 package com.reactlibrary;
 
+import android.content.Context;
 import android.os.PowerManager;
 import android.os.Build;
-import android.content.Intent;
-import android.provider.Settings;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-
-import java.util.Set;
 
 public class RNNotificationLibraryModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
@@ -38,7 +32,7 @@ public class RNNotificationLibraryModule extends ReactContextBaseJavaModule impl
   }
 
   private boolean isScreenOn() {
-    PowerManager powerManager = (PowerManager) getCurrentActivity().getSystemService(getReactApplicationContext().POWER_SERVICE);
+    PowerManager powerManager = (PowerManager) reactContext.getSystemService(Context.POWER_SERVICE);
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
         return powerManager.isInteractive();
     } else {
